@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h3>👩‍🏫 Teacher Dashboard</h3>
+
+  <form method="POST" action="/add_event">
+    <input name="title" placeholder="Event Title" required><br>
+    <input name="date" type="date" required><br>
+    <textarea name="description" placeholder="Description" required></textarea><br>
+    <button type="submit">Add Event</button>
+  </form>
+
+  <h3>📅 Existing Events</h3>
+  <ul>
+    {% for e in events %}
+      <li><strong>{{ e.title }}</strong> — {{ e.date }}<br>{{ e.description }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

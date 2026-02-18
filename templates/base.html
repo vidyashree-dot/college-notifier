@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>College Notifier</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+
+  <!-- Styles for Notification Boxes + Toast -->
+  <style>
+    .notification-box {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .today {
+      background-color: #ff4747;
+    }
+
+    .tomorrow {
+      background-color: #ffa600;
+    }
+
+    .normal {
+      background-color: #4a9eff;
+    }
+
+    /* ⭐ TOAST NOTIFICATION STYLE */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #323232;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+      opacity: 0;
+      transform: translateY(-30px);
+      transition: all 0.4s ease;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+
+</head>
+<body>
+  <div class="background">
+    <div class="overlay"></div>
+  </div>
+
+  <div class="container">
+    <h2 class="title">🎓 College Event & VTU Notifier</h2>
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

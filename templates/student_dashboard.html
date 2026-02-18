@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    width: 95%;
+    margin: 20px auto;
+}
+
+.category-box {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 18px;
+    border-radius: 14px;
+    backdrop-filter: blur(6px);
+    color: white;
+    text-align: center;
+}
+
+.category-box h3 {
+    margin-bottom: 12px;
+}
+
+.category-box .card {
+    background: rgba(255, 255, 255, 0.22);
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    transition: 0.25s;
+}
+
+.category-box .card:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(1.04);
+}
+
+.category-box a {
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+}
+</style>
+
+<audio id="notifySound" src="{{ url_for('static', filename='notify.mp3') }}" preload="auto"></audio>
+
+<div class="card">
+  <h3>🎓 Student Dashboard</h3>
+
+  <h4>🔔 Notifications</h4>
+  {% for n in notifications %}
+    {% if "TODAY" in n %}
+      <div class="notification-box today">{{ n }}</div>
+    {% elif "TOMORROW" in n %}
+      <div class="notification-box tomorrow">{{ n }}</div>
+    {% else %}
+      <div class="notification-box normal">{{ n }}</div>
+    {% endif %}
+  {% endfor %}
+
+  <a href="/logout" class="logout-btn">Logout</a>
+</div>
+
+<!-- 3 COLUMN LAYOUT -->
+<div class="dashboard-grid">
+
+    <!-- EVENTS -->
+    <div class="category-box">
+        <h3>📅 Events</h3>
+        {% if events %}
+        {% for e in events %}
+        <div class="card">
+            <strong>{{ e.title }}</strong><br>
+            {{ e.date }}<br>
+            {{ e.description }}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No events available.</p>
+        {% endif %}
+    </div>
+
+    <!-- VTU UPDATES -->
+    <div class="category-box">
+        <h3>📘 VTU Updates</h3>
+        {% if vtu_updates %}
+        {% for u in vtu_updates %}
+        <div class="card">
+            <a href="{{ u.link }}" target="_blank">{{ u.title }}</a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No VTU updates available.</p>
+        {% endif %}
+    </div>
+
+    <!-- JOB UPDATES -->
+    <div class="category-box">
+        <h3>💼 Job Updates</h3>
+        {% if jobs %}
+        {% for j in jobs %}
+        <div class="card">
+            <a href="{{ j.link }}" target="_blank">{{ j.title }}</a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No job notifications available currently.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Chatbot + Voice scripts (unchanged) -->
+<script>
+  function toggleChatbot() {
+      const box = document.getElementById("chatbot-box");
+      box.classList.toggle("open");
+  }
+
+  function sendMessage() {
+      const input = document.getElementById("chatbot-input");
+      const msg = input.value.trim();
+      if (!msg) return;
+      const chat = document.getElementById("chatbot-messages");
+      chat.innerHTML += <div class="user-msg">${msg}</div>;
+      input.value = "";
+      let reply = "I can help you with events, VTU updates, exams, reminders and jobs.";
+      const m = msg.toLowerCase();
+      if (m.includes("event")) reply = "Events are shown in the first column.";
+      else if (m.includes("vtu")) reply = "VTU updates are in the second column.";
+      else if (m.includes("job")) reply = "Job updates are in the third column.";
+      else if (m.includes("exam")) reply = "Exam notifications appear under VTU updates.";
+      else if (m.includes("hi") || m.includes("hello")) reply = "Hello! Ask me anything.";
+      chat.innerHTML += <div class="bot-msg">${reply}</div>;
+      chat.scrollTop = chat.scrollHeight;
+  }
+</script>
+
+<script>
+  function speak(text) {
+      let msg = new SpeechSynthesisUtterance(text);
+      msg.rate = 1; msg.pitch = 1; msg.volume = 1;
+      speechSynthesis.speak(msg);
+  }
+  window.onload = function () {
+      const notes = document.querySelectorAll(".notification-box");
+      notes.forEach((n, i) => {
+          setTimeout(() => speak(n.innerText), i * 2000);
+      });
+  };
+</script>
+
+{% endblock %}
