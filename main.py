@@ -198,5 +198,7 @@ if __name__ == "__main__":
             time.sleep(86400)
 
     threading.Thread(target=notify_upcoming_events, daemon=True).start()
-if __name__ == "__main__":
-    app.run(host="0.0.0",port=10000)
+
+    if __name__ == "__main__":
+        app.run(host="0.0.0.0", port=10000)
+    
