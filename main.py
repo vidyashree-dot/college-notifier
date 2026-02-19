@@ -198,6 +198,5 @@ if __name__ == "__main__":
             time.sleep(86400)
 
     threading.Thread(target=notify_upcoming_events, daemon=True).start()
-
-    # 🚀 Start the Flask server (REMOVE THE DUPLICATE)
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0",port=10000)
